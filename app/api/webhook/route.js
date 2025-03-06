@@ -1,20 +1,18 @@
 import { Webhook } from 'svix'
 import { headers } from 'next/headers'
-import { WebhookEvent } from '@clerk/nextjs/server'
 import { createOrUpdateUser, deleteUser } from '@lib/actions/user'
 
 export async function POST(req) {
-    const SIGNING_SECRET = process.env.SIGNING_SECRET
+    const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET
 
-    if (!SIGNING_SECRET) {
-        throw new Error('Error: Please add SIGNING_SECRET from Clerk Dashboard to .env or .env')
+    if (!WEBHOOK_SECRET) {
+        throw new Error('Error: Please add WEBHOOK_SECRET from Clerk Dashboard to .env or .env')
     }
 
-    // Create new Svix instance with secret
-    const wh = new Webhook(SIGNING_SECRET)
+   
 
     // Get headers
-    const headerPayload = await headers()
+    const headerPayload = headers()
     const svix_id = headerPayload.get('svix-id')
     const svix_timestamp = headerPayload.get('svix-timestamp')
     const svix_signature = headerPayload.get('svix-signature')
